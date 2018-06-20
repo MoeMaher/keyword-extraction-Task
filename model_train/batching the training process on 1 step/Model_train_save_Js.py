@@ -20,6 +20,7 @@ from scipy.sparse import csr_matrix
 path_to_save_classifier = '/home/wessam/Desktop/Maher/newClassifier'
 path_to_word2vec        = '/home/wessam/Desktop/Maher/GoogleNews-vectors-negative300.bin.gz'
 path_to_datasetWords    = '/home/wessam/Desktop/Maher/datasetWordsTokenized.txt'
+
 #############################################################################
 
 # a call back function that print the accuracy and the confusion matrix by the end of each epoch
@@ -68,6 +69,7 @@ f = open(path_to_datasetWords)
 lines = f.readlines()
 
 #############################################################################
+# tokenize and create trains
 
 strings = [""] * len(lines)
 Y_train = [0] * len(lines)
@@ -81,13 +83,14 @@ for i in range(len(lines)) :
 	Y_train[i] = l[2]
 
 #############################################################################
+# parsing the Y train
 
 Y_train_main = [int(label) for label in Y_train]
 X_train_main = strings
 
 #############################################################################
-
 # collecting the 100 most common words to discard it when predicting
+
 print('analizing words ...')
 freqd = FreqDist(X_train_main)
 common_words = [ w[0] for w in freqd.most_common(100)]
@@ -102,7 +105,7 @@ y_train = Y_train_main
 
 y_train = [y_train[i] for i in range(len(y_train)) if x_train[i] in model.vocab]
 x_train = [word for word in x_train if word in model.vocab] # array of words
-# x_train = list(nltk.bigrams(x_train))
+# x_train = list(nltk.bigrams(x_train)) # I was gonna use bigrams
 y_train = y_train[:len(x_train)]
 
 print(len(x_train))
@@ -181,19 +184,19 @@ history = RNNClassifier.fit(X_train, Y_train, batch_size=300, epochs=20)
 
 # save the model for python uses! #########
 
-# print(RNNClassifier.evaluate(X_test, Y_test, verbose=0))
-        # print('\\nTesting loss: {}, acc: {}\\n'.format(loss, acc))
+print(RNNClassifier.evaluate(X_test, Y_test, verbose=0))
+        print('\\nTesting loss: {}, acc: {}\\n'.format(loss, acc))
 
-# model_json = RNNClassifier.to_json()
-# with open("CNNClassifier.json", "w") as json_file:
-#     json_file.write(model_json)
-# serialize weights to HDF5
-# RNNClassifier.save_weights("model.h5") # TODO: check right path
-# print("Saved model to disk")
+model_json = RNNClassifier.to_json()
+with open("CNNClassifier.json", "w") as json_file:
+    json_file.write(model_json)
+serialize weights to HDF5
+RNNClassifier.save_weights("model.h5") # TODO: check right path
+print("Saved model to disk")
 
 # save the model for Javascript uses! ######
  
-tfjs.converters.save_keras_model(RNNClassifier, path_to_save_classifier)
+    # tfjs.converters.save_keras_model(RNNClassifier, path_to_save_classifier)
 
 #############################################################################
     
