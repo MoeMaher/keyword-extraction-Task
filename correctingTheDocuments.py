@@ -268,7 +268,7 @@ def text_blob_clean(tokens):
 
 
 # the location of the classifier
-path_to_classifier = '/home/maher/Desktop/optimaKeywordsTask/savedModel'
+path_to_classifier = './savedModel'
 
 # predict method take an input the document tokenized and output a list of predictions the 
 # rest of the parameters are self explanatory
